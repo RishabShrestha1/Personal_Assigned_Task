@@ -1,0 +1,306 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:customform/components/dropdown.dart';
+import 'package:customform/components/textfield.dart';
+import 'package:customform/data/gender_data.dart';
+import 'package:customform/screen/userlistscreen.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:customform/data/user_data.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _formKey = GlobalKey<FormState>();
+  File? _profileImage;
+  File? _citizenshipImage;
+  bool isPhotoMissing = false;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  String? sgender;
+
+  addStringToSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('stringValue', "abc");
+  }
+
+  Future<void> _pickImage(bool isProfile) async {
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        if (isProfile) {
+          _profileImage = File(pickedFile.path);
+        } else {
+          _citizenshipImage = File(pickedFile.path);
+        }
+      });
+    }
+  }
+
+  void _submitForm() {
+    UserDetails newUser = UserDetails(
+      name: _nameController.text,
+      email: _emailController.text,
+      phoneNumber: _phoneNumberController.text,
+      age: _ageController.text,
+      gender: sgender!,
+      profileImage: _profileImage,
+      citizenshipImage: _citizenshipImage,
+    );
+    users.add(newUser);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Submission Successful'),
+          content: Text('You have successfully submitted the form.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => UserListScreen()),
+                );
+              },
+              child: Text('See Data'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _navigateToUserList() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => UserListScreen()),
+    );
+  }
+
+  void initState() {
+    super.initState();
+    loadUserDetails(); // Load user details from Shared Preferences
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final phoneRegex = RegExp(r'^(\+977|0)[1-9]\d{9}$');
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: Scaffold(
+        appBar: AppBar(title: const Text('User Details')),
+        body: Center(
+          child: Container(
+            alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Card(
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextInput(
+                            hintText: "Name",
+                            labelText: "Name",
+                            displayIcon: Icon(Icons.person),
+                            customvalidator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your name';
+                              }
+                              return null;
+                            },
+                            controller: _nameController,
+                          ),
+                          SizedBox(height: 16.0), // Add some spacing
+                          TextInput(
+                            hintText: "Email",
+                            labelText: "Email",
+                            displayIcon: Icon(Icons.email),
+                            customvalidator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your email';
+                              } else if (!emailRegex.hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            controller: _emailController,
+                          ),
+
+                          SizedBox(height: 16.0), // Add some spacing
+                          TextInput(
+                            hintText: "Phone Number",
+                            labelText: "Phone Number",
+                            displayIcon: Icon(Icons.lock),
+                            customvalidator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your phone number';
+                              } else if (!phoneRegex.hasMatch(value)) {
+                                return 'Please enter a valid phone number';
+                              } else if (!value.contains("+977")) {
+                                return 'Please enter +977 valid phone number';
+                              }
+                              return null;
+                            },
+                            controller: _phoneNumberController,
+                          ),
+                          SizedBox(height: 16.0), // Add some spacing
+                          TextInput(
+                            hintText: "Age",
+                            labelText: "Age",
+                            displayIcon: Icon(Icons.calendar_month),
+                            customvalidator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter your age';
+                              }
+                              return null;
+                            },
+                            controller: _ageController,
+                          ),
+                          SizedBox(height: 16.0), // Add some spacing
+                          Row(
+                            children: [
+                              Text("Gender:"),
+                              SizedBox(width: 16.0), // Add some spacing
+                              MyDropDown(
+                                listFrom: GenderData.genders,
+                                hint: 'Please Select A Gender',
+                                onGenderChanged: (value) {
+                                  sgender = value;
+                                },
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text("Profile Picture:"),
+                              SizedBox(width: 16.0), // Add some spacing
+                              ElevatedButton(
+                                onPressed: () {
+                                  _pickImage(true);
+                                },
+                                child: Text("Select image From Gallery"),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (_profileImage != null)
+                                Image(
+                                  image: FileImage(_profileImage!),
+                                  height: 100,
+                                  width: 200,
+                                )
+                              else
+                                Container(
+                                  height: 100,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          style: BorderStyle.solid,
+                                          color: Colors.grey),
+                                      color: Colors.grey.shade200),
+                                  alignment: Alignment.center,
+                                  child: Text("No Profile image selected"),
+                                )
+                            ],
+                          ),
+
+                          Row(
+                            children: [
+                              Text("Citizenship:"),
+                              SizedBox(width: 16.0), // Add some spacing
+                              ElevatedButton(
+                                onPressed: () {
+                                  _pickImage(false);
+                                },
+                                child: Text("Select image From Gallery"),
+                              ),
+                              if (isPhotoMissing)
+                                Text(
+                                  'Please select a profile picture',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              if (_citizenshipImage != null)
+                                Image(
+                                  image: FileImage(_citizenshipImage!),
+                                  height: 100,
+                                  width: 200,
+                                )
+                              else
+                                Container(
+                                  height: 100,
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        style: BorderStyle.solid,
+                                        color: Colors.grey),
+                                    color: Colors.grey.shade200,
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text("No Citizenship image selected"),
+                                )
+                            ],
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState?.validate() ?? false) {
+                                _submitForm();
+                                saveUserDetails();
+                                if (kDebugMode) {
+                                  print('Form is valid');
+                                }
+                              }
+                            },
+                            child: Text("Submit"),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _navigateToUserList();
+                            },
+                            child: Text("View User List"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
