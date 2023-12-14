@@ -113,6 +113,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
+  @override
   void initState() {
     super.initState();
     loadUserDetails(); // Load user details from Shared Preferences
@@ -235,7 +236,6 @@ class _MyAppState extends State<MyApp> {
                                 controller: _emailController,
                               ),
                             ),
-
                             SizedBox(height: 16.0), // Add some spacing
                             Card(
                               child: TextInput(
@@ -275,7 +275,7 @@ class _MyAppState extends State<MyApp> {
                               child: Column(children: [
                                 Row(
                                   children: [
-                                    textLabels(texts: "Gender:"),
+                                    TextLabels(texts: "Gender:"),
                                     SizedBox(width: 16.0), // Add some spacing
                                     MyDropDown(
                                       listFrom: GenderData.genders,
@@ -301,7 +301,7 @@ class _MyAppState extends State<MyApp> {
                                 children: [
                                   Row(
                                     children: [
-                                      textLabels(texts: "Profile Picture:"),
+                                      TextLabels(texts: "Profile Picture:"),
                                       SizedBox(width: 16.0), // Add some spacing
                                       ElevatedButton(
                                         onPressed: () {
@@ -333,7 +333,7 @@ class _MyAppState extends State<MyApp> {
                                   ),
                                   Row(
                                     children: [
-                                      textLabels(texts: "Citizenship:"),
+                                      TextLabels(texts: "Citizenship:"),
                                       SizedBox(width: 16.0), // Add some spacing
                                       ElevatedButton(
                                         onPressed: () {
@@ -375,18 +375,23 @@ class _MyAppState extends State<MyApp> {
                                 ],
                               ),
                             ),
-
-                            ElevatedButton(
-                              onPressed: () {
-                                _submitForm();
-                              },
-                              child: Text("Submit"),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                _navigateToUserList();
-                              },
-                              child: Text("View User List"),
+                            SizedBox(height: 16.0), // Add some spacing
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _submitForm();
+                                  },
+                                  child: Text("Submit"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _navigateToUserList();
+                                  },
+                                  child: Text("View User List"),
+                                ),
+                              ],
                             ),
                           ],
                         ),
