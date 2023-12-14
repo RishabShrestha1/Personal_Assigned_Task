@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:customform/components/dropdown.dart';
+import 'package:customform/components/text.dart';
 import 'package:customform/components/textfield.dart';
 import 'package:customform/data/gender_data.dart';
 import 'package:customform/screen/userlistscreen.dart';
@@ -150,6 +151,25 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.blue,
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 20.0,
+            fontFamily: GoogleFonts.oswald().fontFamily,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        cardTheme: CardTheme(
+          elevation: 5.0,
+          shadowColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: SafeArea(
@@ -183,13 +203,8 @@ class _MyAppState extends State<MyApp> {
                         key: _formKey,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
+                          children: <Widget>[
                             Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              shadowColor: Colors.grey,
                               child: TextInput(
                                 hintText: "Enter Your Name Please",
                                 labelText: "Name",
@@ -205,11 +220,6 @@ class _MyAppState extends State<MyApp> {
                             ),
                             SizedBox(height: 16.0), // Add some spacing
                             Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              shadowColor: Colors.grey,
                               child: TextInput(
                                 hintText: "Email",
                                 labelText: "Email",
@@ -228,11 +238,6 @@ class _MyAppState extends State<MyApp> {
 
                             SizedBox(height: 16.0), // Add some spacing
                             Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              shadowColor: Colors.grey,
                               child: TextInput(
                                 hintText: "Phone Number",
                                 labelText: "Phone Number",
@@ -251,111 +256,126 @@ class _MyAppState extends State<MyApp> {
                               ),
                             ),
                             SizedBox(height: 16.0), // Add some spacing
-                            TextInput(
-                              hintText: "Age",
-                              labelText: "Age",
-                              displayIcon: Icon(Icons.calendar_month),
-                              customvalidator: (value) {
-                                if (value!.isEmpty) {
-                                  return 'Please enter your age';
-                                }
-                                return null;
-                              },
-                              controller: _ageController,
+                            Card(
+                              child: TextInput(
+                                hintText: "Age",
+                                labelText: "Age",
+                                displayIcon: Icon(Icons.calendar_month),
+                                customvalidator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your age';
+                                  }
+                                  return null;
+                                },
+                                controller: _ageController,
+                              ),
                             ),
                             SizedBox(height: 16.0), // Add some spacing
-                            Row(
-                              children: [
-                                Text("Gender:"),
-                                SizedBox(width: 16.0), // Add some spacing
-                                MyDropDown(
-                                  listFrom: GenderData.genders,
-                                  hint: 'Please Select A Gender',
-                                  onGenderChanged: (value) {
-                                    setState(() {
-                                      sgender = value;
-                                      showWarning = false;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            if (showWarning)
-                              Text(
-                                'Please select a gender',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            Row(
-                              children: [
-                                Text("Profile Picture:"),
-                                SizedBox(width: 16.0), // Add some spacing
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _pickImage(true);
-                                  },
-                                  child: Text("Select image From Gallery"),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (_profileImage != null)
-                                  Image(
-                                    image: FileImage(_profileImage!),
-                                    height: 100,
-                                    width: 200,
-                                  )
-                                else if (isProfilePhotoMissing)
-                                  Visibility(
-                                    visible: isProfilePhotoMissing,
-                                    child: Text(
-                                      'No profile picture selected',
-                                      style: TextStyle(color: Colors.red),
+                            Card(
+                              child: Column(children: [
+                                Row(
+                                  children: [
+                                    textLabels(texts: "Gender:"),
+                                    SizedBox(width: 16.0), // Add some spacing
+                                    MyDropDown(
+                                      listFrom: GenderData.genders,
+                                      hint: 'Please Select A Gender',
+                                      onGenderChanged: (value) {
+                                        setState(() {
+                                          sgender = value;
+                                          showWarning = false;
+                                        });
+                                      },
                                     ),
+                                  ],
+                                ),
+                                if (showWarning)
+                                  Text(
+                                    'Please select a gender',
+                                    style: TextStyle(color: Colors.red),
                                   ),
-                              ],
+                              ]),
+                            ),
+                            Card(
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      textLabels(texts: "Profile Picture:"),
+                                      SizedBox(width: 16.0), // Add some spacing
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _pickImage(true);
+                                        },
+                                        child:
+                                            Text("Select image From Gallery"),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (_profileImage != null)
+                                        Image(
+                                          image: FileImage(_profileImage!),
+                                          height: 100,
+                                          width: 200,
+                                        )
+                                      else if (isProfilePhotoMissing)
+                                        Visibility(
+                                          visible: isProfilePhotoMissing,
+                                          child: Text(
+                                            'No profile picture selected',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      textLabels(texts: "Citizenship:"),
+                                      SizedBox(width: 16.0), // Add some spacing
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _pickImage(false);
+                                        },
+                                        child:
+                                            Text("Select image From Gallery"),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      if (_citizenshipImage != null)
+                                        Image(
+                                          image: FileImage(_citizenshipImage!),
+                                          height: 100,
+                                          width: 200,
+                                        )
+                                      else if (isCitizenshipPhotoMissing)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.red,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Visibility(
+                                            visible: isCitizenshipPhotoMissing,
+                                            child: Text(
+                                              'No Citizenship picture selected',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          ),
+                                        )
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
 
-                            Row(
-                              children: [
-                                Text("Citizenship:"),
-                                SizedBox(width: 16.0), // Add some spacing
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _pickImage(false);
-                                  },
-                                  child: Text("Select image From Gallery"),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (_citizenshipImage != null)
-                                  Image(
-                                    image: FileImage(_citizenshipImage!),
-                                    height: 100,
-                                    width: 200,
-                                  )
-                                else if (isCitizenshipPhotoMissing)
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.red,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: Visibility(
-                                      visible: isCitizenshipPhotoMissing,
-                                      child: Text(
-                                        'No Citizenship picture selected',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  )
-                              ],
-                            ),
                             ElevatedButton(
                               onPressed: () {
                                 _submitForm();

@@ -22,20 +22,24 @@ class _MyDropDownState extends State<MyDropDown> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      items: widget.listFrom.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          selectedGender = newValue;
-        });
-        widget.onGenderChanged(selectedGender);
-      },
-      hint: Text(widget.hint), // Optional: Add a hint text
-      value: selectedGender,
-    );
+        items: widget.listFrom.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedGender = newValue;
+          });
+          widget.onGenderChanged(selectedGender);
+        },
+        hint: Text(widget.hint), // Optional: Add a hint text
+        value: selectedGender,
+        icon: const Icon(Icons.arrow_drop_down_circle_outlined),
+        underline: Container(
+          height: 2,
+          color: const Color.fromARGB(0, 33, 149, 243),
+        ));
   }
 }

@@ -17,6 +17,13 @@ void main() {
             fontWeight: FontWeight.bold,
           ),
         ),
+        cardTheme: CardTheme(
+          elevation: 5.0,
+          shadowColor: Colors.grey,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+        ),
       ),
       home: MyApp(),
     ),
