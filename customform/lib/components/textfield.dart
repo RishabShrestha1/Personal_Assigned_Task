@@ -20,10 +20,10 @@ class TextInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        icon: displayIcon,
-        hintText: hintText,
-        labelText: labelText,
-      ),
+          icon: displayIcon,
+          hintText: hintText,
+          labelText: labelText,
+          border: InputBorder.none),
       validator: customvalidator,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       controller: controller,

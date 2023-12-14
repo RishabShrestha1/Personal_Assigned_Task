@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:customform/data/user_data.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -19,16 +20,22 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _formKey = GlobalKey<FormState>();
-  File? _profileImage;
-  File? _citizenshipImage;
-  bool isProfilePhotoMissing = false;
-  bool isCitizenshipPhotoMissing = false;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
-  String? sgender;
+
+  final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final phoneRegex = RegExp(r'^(\+977|0)[1-9]\d{9}$');
+
+  File? _profileImage;
+  File? _citizenshipImage;
+
   bool showWarning = false;
+  bool isProfilePhotoMissing = false;
+  bool isCitizenshipPhotoMissing = false;
+  String? sgender;
 
   addStringToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -142,194 +149,227 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    final phoneRegex = RegExp(r'^(\+977|0)[1-9]\d{9}$');
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Scaffold(
-        appBar: AppBar(title: const Text('User Details')),
-        body: Center(
-          child: Container(
-            alignment: Alignment.topCenter,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Card(
+      home: SafeArea(
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight),
+            child: Column(
+              children: [
+                AppBar(
+                  title: const Text('User Details'),
                   elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextInput(
-                            hintText: "Name",
-                            labelText: "Name",
-                            displayIcon: Icon(Icons.person),
-                            customvalidator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your name';
-                              }
-                              return null;
-                            },
-                            controller: _nameController,
-                          ),
-                          SizedBox(height: 16.0), // Add some spacing
-                          TextInput(
-                            hintText: "Email",
-                            labelText: "Email",
-                            displayIcon: Icon(Icons.email),
-                            customvalidator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your email';
-                              } else if (!emailRegex.hasMatch(value)) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
-                            controller: _emailController,
-                          ),
-
-                          SizedBox(height: 16.0), // Add some spacing
-                          TextInput(
-                            hintText: "Phone Number",
-                            labelText: "Phone Number",
-                            displayIcon: Icon(Icons.lock),
-                            customvalidator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your phone number';
-                              } else if (!phoneRegex.hasMatch(value)) {
-                                return 'Please enter a valid phone number';
-                              } else if (!value.contains("+977")) {
-                                return 'Please enter +977 valid phone number';
-                              }
-                              return null;
-                            },
-                            controller: _phoneNumberController,
-                          ),
-                          SizedBox(height: 16.0), // Add some spacing
-                          TextInput(
-                            hintText: "Age",
-                            labelText: "Age",
-                            displayIcon: Icon(Icons.calendar_month),
-                            customvalidator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter your age';
-                              }
-                              return null;
-                            },
-                            controller: _ageController,
-                          ),
-                          SizedBox(height: 16.0), // Add some spacing
-                          Row(
-                            children: [
-                              Text("Gender:"),
-                              SizedBox(width: 16.0), // Add some spacing
-                              MyDropDown(
-                                listFrom: GenderData.genders,
-                                hint: 'Please Select A Gender',
-                                onGenderChanged: (value) {
-                                  setState(() {
-                                    sgender = value;
-                                    showWarning = false;
-                                  });
-                                },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  shadowColor: Colors.grey,
+                ),
+              ],
+            ),
+          ),
+          body: Center(
+            child: Container(
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Card(
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Card(
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                            ],
-                          ),
-                          if (showWarning)
-                            Text(
-                              'Please select a gender',
-                              style: TextStyle(color: Colors.red),
+                              shadowColor: Colors.grey,
+                              child: TextInput(
+                                hintText: "Enter Your Name Please",
+                                labelText: "Name",
+                                displayIcon: Icon(Icons.person),
+                                customvalidator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your name';
+                                  }
+                                  return null;
+                                },
+                                controller: _nameController,
+                              ),
                             ),
-                          Row(
-                            children: [
-                              Text("Profile Picture:"),
-                              SizedBox(width: 16.0), // Add some spacing
-                              ElevatedButton(
-                                onPressed: () {
-                                  _pickImage(true);
-                                },
-                                child: Text("Select image From Gallery"),
+                            SizedBox(height: 16.0), // Add some spacing
+                            Card(
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (_profileImage != null)
-                                Image(
-                                  image: FileImage(_profileImage!),
-                                  height: 100,
-                                  width: 200,
-                                )
-                              else if (isProfilePhotoMissing)
-                                Visibility(
-                                  visible: isProfilePhotoMissing,
-                                  child: Text(
-                                    'No profile picture selected',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                            ],
-                          ),
+                              shadowColor: Colors.grey,
+                              child: TextInput(
+                                hintText: "Email",
+                                labelText: "Email",
+                                displayIcon: Icon(Icons.email),
+                                customvalidator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your email';
+                                  } else if (!emailRegex.hasMatch(value)) {
+                                    return 'Please enter a valid email address';
+                                  }
+                                  return null;
+                                },
+                                controller: _emailController,
+                              ),
+                            ),
 
-                          Row(
-                            children: [
-                              Text("Citizenship:"),
-                              SizedBox(width: 16.0), // Add some spacing
-                              ElevatedButton(
-                                onPressed: () {
-                                  _pickImage(false);
-                                },
-                                child: Text("Select image From Gallery"),
+                            SizedBox(height: 16.0), // Add some spacing
+                            Card(
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              if (_citizenshipImage != null)
-                                Image(
-                                  image: FileImage(_citizenshipImage!),
-                                  height: 100,
-                                  width: 200,
-                                )
-                              else if (isCitizenshipPhotoMissing)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.red,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Visibility(
-                                    visible: isCitizenshipPhotoMissing,
+                              shadowColor: Colors.grey,
+                              child: TextInput(
+                                hintText: "Phone Number",
+                                labelText: "Phone Number",
+                                displayIcon: Icon(Icons.lock),
+                                customvalidator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter your phone number';
+                                  } else if (!phoneRegex.hasMatch(value)) {
+                                    return 'Please enter a valid phone number';
+                                  } else if (!value.contains("+977")) {
+                                    return 'Please enter +977 valid phone number';
+                                  }
+                                  return null;
+                                },
+                                controller: _phoneNumberController,
+                              ),
+                            ),
+                            SizedBox(height: 16.0), // Add some spacing
+                            TextInput(
+                              hintText: "Age",
+                              labelText: "Age",
+                              displayIcon: Icon(Icons.calendar_month),
+                              customvalidator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter your age';
+                                }
+                                return null;
+                              },
+                              controller: _ageController,
+                            ),
+                            SizedBox(height: 16.0), // Add some spacing
+                            Row(
+                              children: [
+                                Text("Gender:"),
+                                SizedBox(width: 16.0), // Add some spacing
+                                MyDropDown(
+                                  listFrom: GenderData.genders,
+                                  hint: 'Please Select A Gender',
+                                  onGenderChanged: (value) {
+                                    setState(() {
+                                      sgender = value;
+                                      showWarning = false;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            if (showWarning)
+                              Text(
+                                'Please select a gender',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            Row(
+                              children: [
+                                Text("Profile Picture:"),
+                                SizedBox(width: 16.0), // Add some spacing
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _pickImage(true);
+                                  },
+                                  child: Text("Select image From Gallery"),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_profileImage != null)
+                                  Image(
+                                    image: FileImage(_profileImage!),
+                                    height: 100,
+                                    width: 200,
+                                  )
+                                else if (isProfilePhotoMissing)
+                                  Visibility(
+                                    visible: isProfilePhotoMissing,
                                     child: Text(
-                                      'No Citizenship picture selected',
+                                      'No profile picture selected',
                                       style: TextStyle(color: Colors.red),
                                     ),
                                   ),
-                                )
-                            ],
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _submitForm();
-                            },
-                            child: Text("Submit"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              _navigateToUserList();
-                            },
-                            child: Text("View User List"),
-                          ),
-                        ],
+                              ],
+                            ),
+
+                            Row(
+                              children: [
+                                Text("Citizenship:"),
+                                SizedBox(width: 16.0), // Add some spacing
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _pickImage(false);
+                                  },
+                                  child: Text("Select image From Gallery"),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_citizenshipImage != null)
+                                  Image(
+                                    image: FileImage(_citizenshipImage!),
+                                    height: 100,
+                                    width: 200,
+                                  )
+                                else if (isCitizenshipPhotoMissing)
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.red,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Visibility(
+                                      visible: isCitizenshipPhotoMissing,
+                                      child: Text(
+                                        'No Citizenship picture selected',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  )
+                              ],
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                _submitForm();
+                              },
+                              child: Text("Submit"),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                _navigateToUserList();
+                              },
+                              child: Text("View User List"),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
