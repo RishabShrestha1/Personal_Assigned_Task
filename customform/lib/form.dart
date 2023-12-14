@@ -4,7 +4,6 @@ import 'package:customform/components/dropdown.dart';
 import 'package:customform/components/textfield.dart';
 import 'package:customform/data/gender_data.dart';
 import 'package:customform/screen/userlistscreen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:customform/data/user_data.dart';
@@ -22,12 +21,14 @@ class _MyAppState extends State<MyApp> {
   final _formKey = GlobalKey<FormState>();
   File? _profileImage;
   File? _citizenshipImage;
-  bool isPhotoMissing = false;
+  bool isProfilePhotoMissing = false;
+  bool isCitizenshipPhotoMissing = false;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   String? sgender;
+  bool showWarning = false;
 
   addStringToSF() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -42,49 +43,60 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         if (isProfile) {
           _profileImage = File(pickedFile.path);
+          isProfilePhotoMissing = false;
         } else {
           _citizenshipImage = File(pickedFile.path);
+          isCitizenshipPhotoMissing = false;
         }
       });
     }
   }
 
   void _submitForm() {
-    UserDetails newUser = UserDetails(
-      name: _nameController.text,
-      email: _emailController.text,
-      phoneNumber: _phoneNumberController.text,
-      age: _ageController.text,
-      gender: sgender!,
-      profileImage: _profileImage,
-      citizenshipImage: _citizenshipImage,
-    );
-    users.add(newUser);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Submission Successful'),
-          content: Text('You have successfully submitted the form.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('Close'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => UserListScreen()),
-                );
-              },
-              child: Text('See Data'),
-            ),
-          ],
-        );
-      },
-    );
+    setState(() {
+      showWarning = false;
+      isProfilePhotoMissing = false;
+      isCitizenshipPhotoMissing = false;
+    });
+    validate_excepttextfield();
+    if (_formKey.currentState?.validate() ?? false) {
+      saveUserDetails();
+      UserDetails newUser = UserDetails(
+        name: _nameController.text,
+        email: _emailController.text,
+        phoneNumber: _phoneNumberController.text,
+        age: _ageController.text,
+        gender: sgender!,
+        profileImage: _profileImage,
+        citizenshipImage: _citizenshipImage,
+      );
+      users.add(newUser);
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Submission Successful'),
+            content: Text('You have successfully submitted the form.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text('Close'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => UserListScreen()),
+                  );
+                },
+                child: Text('See Data'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   void _navigateToUserList() {
@@ -96,6 +108,36 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     loadUserDetails(); // Load user details from Shared Preferences
+  }
+
+  void validatedropdown() {
+    if (sgender == null) {
+      setState(() {
+        showWarning = true;
+      });
+    }
+  }
+
+  void validateprofileimage() {
+    if (_profileImage == null) {
+      setState(() {
+        isProfilePhotoMissing = true;
+      });
+    }
+  }
+
+  void validatecitizenshipimage() {
+    if (_profileImage == null) {
+      setState(() {
+        isCitizenshipPhotoMissing = true;
+      });
+    }
+  }
+
+  void validate_excepttextfield() {
+    validatedropdown();
+    validateprofileimage();
+    validatecitizenshipimage();
   }
 
   @override
@@ -191,11 +233,19 @@ class _MyAppState extends State<MyApp> {
                                 listFrom: GenderData.genders,
                                 hint: 'Please Select A Gender',
                                 onGenderChanged: (value) {
-                                  sgender = value;
+                                  setState(() {
+                                    sgender = value;
+                                    showWarning = false;
+                                  });
                                 },
-                              )
+                              ),
                             ],
                           ),
+                          if (showWarning)
+                            Text(
+                              'Please select a gender',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           Row(
                             children: [
                               Text("Profile Picture:"),
@@ -217,18 +267,14 @@ class _MyAppState extends State<MyApp> {
                                   height: 100,
                                   width: 200,
                                 )
-                              else
-                                Container(
-                                  height: 100,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                          style: BorderStyle.solid,
-                                          color: Colors.grey),
-                                      color: Colors.grey.shade200),
-                                  alignment: Alignment.center,
-                                  child: Text("No Profile image selected"),
-                                )
+                              else if (isProfilePhotoMissing)
+                                Visibility(
+                                  visible: isProfilePhotoMissing,
+                                  child: Text(
+                                    'No profile picture selected',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
                             ],
                           ),
 
@@ -242,11 +288,6 @@ class _MyAppState extends State<MyApp> {
                                 },
                                 child: Text("Select image From Gallery"),
                               ),
-                              if (isPhotoMissing)
-                                Text(
-                                  'Please select a profile picture',
-                                  style: TextStyle(color: Colors.red),
-                                ),
                             ],
                           ),
                           Row(
@@ -258,30 +299,27 @@ class _MyAppState extends State<MyApp> {
                                   height: 100,
                                   width: 200,
                                 )
-                              else
+                              else if (isCitizenshipPhotoMissing)
                                 Container(
-                                  height: 100,
-                                  width: 200,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        style: BorderStyle.solid,
-                                        color: Colors.grey),
-                                    color: Colors.grey.shade200,
+                                      color: Colors.red,
+                                      width: 1,
+                                    ),
                                   ),
-                                  alignment: Alignment.center,
-                                  child: Text("No Citizenship image selected"),
+                                  child: Visibility(
+                                    visible: isCitizenshipPhotoMissing,
+                                    child: Text(
+                                      'No Citizenship picture selected',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ),
                                 )
                             ],
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                _submitForm();
-                                saveUserDetails();
-                                if (kDebugMode) {
-                                  print('Form is valid');
-                                }
-                              }
+                              _submitForm();
                             },
                             child: Text("Submit"),
                           ),
