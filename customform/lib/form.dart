@@ -279,15 +279,20 @@ class _MyAppState extends State<MyApp> {
                                         ),
                                     ]),
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    textLabels(texts: "Profile Picture:"),
-                                    SizedBox(width: 16.0), // Add some spacing
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _pickImage(true);
-                                      },
-                                      child: Text("Select image From Gallery"),
+                                    Row(
+                                      children: [
+                                        textLabels(texts: "Profile Picture:"),
+                                        SizedBox(
+                                            width: 16.0), // Add some spacing
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _pickImage(true);
+                                          },
+                                          child:
+                                              Text("Select image From Gallery"),
+                                        ),
+                                      ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
