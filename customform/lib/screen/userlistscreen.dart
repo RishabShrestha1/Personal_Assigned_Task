@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:customform/data/user_data.dart';
 
 class UserListScreen extends StatefulWidget {
+  const UserListScreen({super.key});
+
   @override
   _UserListScreenState createState() => _UserListScreenState();
 }
@@ -17,7 +19,7 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('List of Users'),
+        title: const Text('List of Users'),
       ),
       body: ListView.builder(
         itemCount: users.length,
@@ -31,7 +33,7 @@ class _UserListScreenState extends State<UserListScreen> {
             leading: CircleAvatar(
               backgroundImage: user.profileImage != null
                   ? FileImage(user.profileImage!)
-                  : AssetImage('assets/default_profile_image.jpg')
+                  : const AssetImage('assets/default_profile_image.jpg')
                       as ImageProvider<Object>,
             ),
           );

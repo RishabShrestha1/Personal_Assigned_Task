@@ -12,6 +12,7 @@ class TextLabels extends StatelessWidget {
       texts,
       style: GoogleFonts.oswald(
         fontSize: 14,
+        color: const Color.fromARGB(255, 150, 150, 150),
       ),
     );
   }

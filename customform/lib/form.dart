@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:customform/components/dropdown.dart';
 import 'package:customform/components/text.dart';
 import 'package:customform/components/textfield.dart';
 import 'package:customform/data/gender_data.dart';
 import 'package:customform/screen/userlistscreen.dart';
+import 'package:customform/theme/mytheme.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:customform/data/user_data.dart';
@@ -152,50 +153,21 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.blue,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20.0,
-            fontFamily: GoogleFonts.oswald().fontFamily,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        cardTheme: CardTheme(
-          elevation: 5.0,
-          shadowColor: Colors.grey,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-        ),
-      ),
+      theme: mytheme,
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: SafeArea(
         child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight),
-            child: Column(
-              children: [
-                AppBar(
-                  title: const Text('User Details'),
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  shadowColor: Colors.grey,
-                ),
-              ],
-            ),
-          ),
           body: Center(
             child: Container(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
+<<<<<<< Updated upstream
                   child: Card(
                     elevation: 5,
                     child: Padding(
@@ -288,47 +260,123 @@ class _MyAppState extends State<MyApp> {
                                       },
                                     ),
                                   ],
+=======
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.star_rate_rounded,
+                          color: Colors.white,
+                          size: 30.0,
+                        ),
+                        SizedBox(height: 16.0), // Add some spacing
+                        Text(
+                          'User Details',
+                          style: GoogleFonts.oswald(
+                            fontSize: 24,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                          ),
+                        ),
+                        SizedBox(height: 16.0), // Add some spacing
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide.none,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                TextInput(
+                                  hintText: "Enter Your Name Please",
+                                  labelText: "Name",
+                                  displayIcon: Icon(Icons.person),
+                                  customvalidator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your name';
+                                    }
+                                    return null;
+                                  },
+                                  controller: _nameController,
+>>>>>>> Stashed changes
                                 ),
-                                if (showWarning)
-                                  Text(
-                                    'Please select a gender',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                              ]),
-                            ),
-                            Card(
-                              child: Column(
-                                children: [
-                                  Row(
+                                SizedBox(height: 16.0), // Add some spacing
+                                TextInput(
+                                  hintText: "Email",
+                                  labelText: "Email",
+                                  displayIcon: Icon(Icons.email),
+                                  customvalidator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your email';
+                                    } else if (!emailRegex.hasMatch(value)) {
+                                      return 'Please enter a valid email address';
+                                    }
+                                    return null;
+                                  },
+                                  controller: _emailController,
+                                ),
+
+                                SizedBox(height: 16.0), // Add some spacing
+                                TextInput(
+                                  hintText: "Phone Number",
+                                  labelText: "Phone Number",
+                                  displayIcon: Icon(Icons.lock),
+                                  customvalidator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your phone number';
+                                    } else if (!phoneRegex.hasMatch(value)) {
+                                      return 'Please enter a valid phone number';
+                                    } else if (!value.contains("+977")) {
+                                      return 'Please enter +977 valid phone number';
+                                    }
+                                    return null;
+                                  },
+                                  controller: _phoneNumberController,
+                                ),
+                                SizedBox(height: 16.0), // Add some spacing
+                                TextInput(
+                                  hintText: "Age",
+                                  labelText: "Age",
+                                  displayIcon: Icon(Icons.calendar_month),
+                                  customvalidator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Please enter your age';
+                                    }
+                                    return null;
+                                  },
+                                  controller: _ageController,
+                                ),
+                                SizedBox(height: 16.0), // Add some spacing
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
+<<<<<<< Updated upstream
                                       TextLabels(texts: "Profile Picture:"),
+=======
+                                      textLabels(texts: "Gender:"),
+>>>>>>> Stashed changes
                                       SizedBox(width: 16.0), // Add some spacing
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          _pickImage(true);
+                                      MyDropDown(
+                                        listFrom: GenderData.genders,
+                                        hint: 'Please Select A Gender',
+                                        onGenderChanged: (value) {
+                                          setState(() {
+                                            sgender = value;
+                                            showWarning = false;
+                                          });
                                         },
-                                        child:
-                                            Text("Select image From Gallery"),
                                       ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      if (_profileImage != null)
-                                        Image(
-                                          image: FileImage(_profileImage!),
-                                          height: 100,
-                                          width: 200,
-                                        )
-                                      else if (isProfilePhotoMissing)
-                                        Visibility(
-                                          visible: isProfilePhotoMissing,
-                                          child: Text(
-                                            'No profile picture selected',
-                                            style: TextStyle(color: Colors.red),
-                                          ),
+                                      if (showWarning)
+                                        Text(
+                                          'Please select a gender',
+                                          style: TextStyle(color: Colors.red),
                                         ),
+<<<<<<< Updated upstream
                                     ],
                                   ),
                                   Row(
@@ -363,18 +411,125 @@ class _MyAppState extends State<MyApp> {
                                           ),
                                           child: Visibility(
                                             visible: isCitizenshipPhotoMissing,
+=======
+                                    ]),
+                                Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        textLabels(texts: "Profile Picture:"),
+                                        SizedBox(
+                                            width: 16.0), // Add some spacing
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _pickImage(true);
+                                          },
+                                          child:
+                                              Text("Select image From Gallery"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (_profileImage != null)
+                                          Image(
+                                            image: FileImage(_profileImage!),
+                                            height: 100,
+                                            width: 200,
+                                          )
+                                        else if (isProfilePhotoMissing)
+                                          Visibility(
+                                            visible: isProfilePhotoMissing,
+>>>>>>> Stashed changes
                                             child: Text(
-                                              'No Citizenship picture selected',
+                                              'No profile picture selected',
                                               style:
                                                   TextStyle(color: Colors.red),
                                             ),
                                           ),
-                                        )
-                                    ],
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        textLabels(texts: "Citizenship:"),
+                                        SizedBox(
+                                            width: 16.0), // Add some spacing
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _pickImage(false);
+                                          },
+                                          child:
+                                              Text("Select image From Gallery"),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        if (_citizenshipImage != null)
+                                          Image(
+                                            image:
+                                                FileImage(_citizenshipImage!),
+                                            height: 100,
+                                            width: 200,
+                                          )
+                                        else if (isCitizenshipPhotoMissing)
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.red,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            child: Visibility(
+                                              visible:
+                                                  isCitizenshipPhotoMissing,
+                                              child: Text(
+                                                'No Citizenship picture selected',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                            ),
+                                          )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 16.0), // Add some spacing
+                                Container(
+                                  height: 50,
+                                  child: SizedBox.expand(
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.red,
+                                            Colors.purple,
+                                          ],
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        shape: BoxShape.rectangle,
+                                      ),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          _submitForm();
+                                        },
+                                        child: Text(
+                                          "Submit",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(height: 16.0), // Add some spacing
+                              ],
                             ),
+<<<<<<< Updated upstream
                             SizedBox(height: 16.0), // Add some spacing
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -394,8 +549,11 @@ class _MyAppState extends State<MyApp> {
                               ],
                             ),
                           ],
+=======
+                          ),
+>>>>>>> Stashed changes
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),

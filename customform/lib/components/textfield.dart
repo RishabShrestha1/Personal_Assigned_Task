@@ -18,15 +18,46 @@ class TextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-          icon: displayIcon,
-          hintText: hintText,
-          labelText: labelText,
-          border: InputBorder.none),
-      validator: customvalidator,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      controller: controller,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          labelText,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 150, 150, 150),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Color.fromARGB(255, 44, 44, 44),
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: TextFormField(
+              decoration: InputDecoration(
+                icon: Icon(
+                  displayIcon.icon,
+                  color: Colors.white,
+                ),
+                border: InputBorder.none,
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                    fontSize: 14, color: Color.fromARGB(255, 255, 255, 255)),
+              ),
+              validator: customvalidator,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              controller: controller,
+              autocorrect: true,
+              autofillHints: const [AutofillHints.email],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
