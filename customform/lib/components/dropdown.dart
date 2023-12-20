@@ -23,35 +23,47 @@ class _MyDropDownState extends State<MyDropDown> {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color.fromARGB(255, 44, 44, 44),
-      ),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Color.fromARGB(255, 44, 44, 44),
+          shape: BoxShape.rectangle),
       padding: const EdgeInsets.only(left: 10),
+      width: MediaQuery.of(context).size.width * 0.9,
+      alignment: Alignment.center,
       child: DropdownButton<String>(
-          items: widget.listFrom.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              selectedGender = newValue;
-            });
-            widget.onGenderChanged(selectedGender);
-          },
-          hint: Text(
-            widget.hint,
-            style: TextStyle(
-              color: Colors.white,
+        dropdownColor: const Color.fromARGB(255, 44, 44, 44),
+        items: widget.listFrom.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value, style: const TextStyle(color: Colors.white)),
+          );
+        }).toList(),
+        onChanged: (String? newValue) {
+          setState(() {
+            selectedGender = newValue;
+          });
+          widget.onGenderChanged(selectedGender);
+        },
+        hint: Row(
+          children: [
+            Text(
+              widget.hint,
+              style: const TextStyle(
+                color: Colors.white,
+              ),
             ),
-          ), // Optional: Add a hint text
-          value: selectedGender,
-          icon: const Icon(Icons.arrow_drop_down_circle_outlined),
-          underline: Container(
-            height: 2,
-            color: const Color.fromARGB(0, 33, 149, 243),
-          )),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.2),
+          ],
+        ),
+        icon: Icon(
+          Icons.arrow_drop_down_circle_outlined,
+          color: Colors.white,
+        ),
+        value: selectedGender,
+        underline: Container(
+          height: 2,
+          color: const Color.fromARGB(0, 33, 149, 243),
+        ),
+      ),
     );
   }
 }

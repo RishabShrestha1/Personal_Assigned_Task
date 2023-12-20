@@ -194,6 +194,7 @@ class _MyAppState extends State<MyApp> {
                             key: _formKey,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 TextInput(
                                   hintText: "Enter Your Name Please",
@@ -278,20 +279,15 @@ class _MyAppState extends State<MyApp> {
                                         ),
                                     ]),
                                 Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      children: [
-                                        textLabels(texts: "Profile Picture:"),
-                                        SizedBox(
-                                            width: 16.0), // Add some spacing
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            _pickImage(true);
-                                          },
-                                          child:
-                                              Text("Select image From Gallery"),
-                                        ),
-                                      ],
+                                    textLabels(texts: "Profile Picture:"),
+                                    SizedBox(width: 16.0), // Add some spacing
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        _pickImage(true);
+                                      },
+                                      child: Text("Select image From Gallery"),
                                     ),
                                     Row(
                                       mainAxisAlignment:

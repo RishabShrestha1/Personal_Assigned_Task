@@ -49,6 +49,10 @@ class TextInput extends StatelessWidget {
                 hintStyle: const TextStyle(
                     fontSize: 14, color: Color.fromARGB(255, 255, 255, 255)),
               ),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
               validator: customvalidator,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               controller: controller,
