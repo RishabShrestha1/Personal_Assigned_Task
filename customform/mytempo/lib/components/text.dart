@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class textLabels extends StatelessWidget {
+class TextLabels extends StatelessWidget {
   final String texts;
 
-  const textLabels({Key? key, required this.texts}) : super(key: key);
+  const TextLabels({Key? key, required this.texts}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
