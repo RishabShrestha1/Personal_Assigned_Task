@@ -31,35 +31,32 @@ class TextInput extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Color.fromARGB(255, 44, 44, 44),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(
-                  displayIcon.icon,
-                  color: Colors.white,
-                ),
-                border: InputBorder.none,
-                hintText: hintText,
-                hintStyle: const TextStyle(
-                    fontSize: 14, color: Color.fromARGB(255, 255, 255, 255)),
-              ),
-              style: const TextStyle(
-                fontSize: 14,
-                color: Color.fromARGB(255, 255, 255, 255),
-              ),
-              validator: customvalidator,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              controller: controller,
-              autocorrect: true,
-              autofillHints: const [AutofillHints.email],
+        TextFormField(
+          decoration: InputDecoration(
+            prefixIcon: Icon(
+              displayIcon.icon,
+              color: Colors.white,
             ),
+            filled: true,
+            fillColor: const Color.fromARGB(255, 50, 50, 50),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                width: 0,
+                style: BorderStyle.none,
+              ),
+            ),
+            hintText: hintText,
+            hintStyle: const TextStyle(
+                fontSize: 14, color: Color.fromARGB(255, 255, 255, 255)),
           ),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Color.fromARGB(255, 255, 255, 255),
+          ),
+          validator: customvalidator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          controller: controller,
         ),
       ],
     );

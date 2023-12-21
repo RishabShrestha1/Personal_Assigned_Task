@@ -281,13 +281,19 @@ class _MyAppState extends State<MyApp> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    textLabels(texts: "Profile Picture:"),
-                                    SizedBox(width: 16.0), // Add some spacing
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        _pickImage(true);
-                                      },
-                                      child: Text("Select image From Gallery"),
+                                    Row(
+                                      children: [
+                                        textLabels(texts: "Profile Picture:"),
+                                        SizedBox(
+                                            width: 16.0), // Add some spacing
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            _pickImage(true);
+                                          },
+                                          child:
+                                              Text("Select image From Gallery"),
+                                        ),
+                                      ],
                                     ),
                                     Row(
                                       mainAxisAlignment:
@@ -336,21 +342,12 @@ class _MyAppState extends State<MyApp> {
                                             width: 200,
                                           )
                                         else if (isCitizenshipPhotoMissing)
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: Colors.red,
-                                                width: 1,
-                                              ),
-                                            ),
-                                            child: Visibility(
-                                              visible:
-                                                  isCitizenshipPhotoMissing,
-                                              child: Text(
-                                                'No Citizenship picture selected',
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
+                                          Visibility(
+                                            visible: isCitizenshipPhotoMissing,
+                                            child: Text(
+                                              'No Citizenship picture selected',
+                                              style:
+                                                  TextStyle(color: Colors.red),
                                             ),
                                           )
                                       ],
